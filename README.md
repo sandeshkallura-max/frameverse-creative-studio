@@ -41,7 +41,7 @@ The public key is meant to be used in the browser, so it is safe in a public Git
 
 ## Before launch
 
-- In `index.html`, fill in the three EmailJS values near the bottom (see below). Until you do, the forms fall back to opening the visitor's email app using `STUDIO_EMAIL`.
+- In `index.html`, fill in the three EmailJS values near the bottom (see below). The forms only send after these are filled in.
 - Replace the Unsplash placeholder images with your own work or licensed media.
 - Check that the brand name is available (domain, social handles, trademark).
 - Fill in the Privacy Policy and Terms of Service links.

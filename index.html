@@ -249,12 +249,17 @@
             <textarea name="message"></textarea>
           </label>
           <div class="form-actions">
-            <button type="submit" class="btn">Send by email</button>
+            <button type="submit" class="btn">Send enquiry</button>
             <button type="button" class="btn btn-outline wa-btn" hidden>Send on WhatsApp</button>
           </div>
           <p class="form-note">Your enquiry is sent straight to our email. We don't store it on this website.</p>
           <p class="form-status" role="status" aria-live="polite"></p>
         </form>
+        <div class="thanks" id="thanks-panel" role="status" aria-live="polite" tabindex="-1" hidden>
+          <h3>Thank you!</h3>
+          <p>Your enquiry has been sent. We will get back to you soon.</p>
+          <button type="button" class="btn btn-outline" id="thanks-back">Send another enquiry</button>
+        </div>
       </div>
     </div>
   </section>
@@ -273,11 +278,9 @@
   <script>
     // ---- Settings: replace these with your real details ----
     // EmailJS (get these 3 values from your EmailJS dashboard, see README)
-    var EMAILJS_PUBLIC_KEY = "";
-    var EMAILJS_SERVICE_ID = "";
-    var EMAILJS_TEMPLATE_ID = "";
-    // Only used as a backup if the EmailJS values above are empty
-    var STUDIO_EMAIL = "hello@example.com";
+    var EMAILJS_PUBLIC_KEY = "Qh-XlHZ5neSWK8lIo";
+    var EMAILJS_SERVICE_ID = "service_x531zbm";
+    var EMAILJS_TEMPLATE_ID = "template_fw1dc7g";
     var WHATSAPP_NUMBER = ""; // digits only with country code, e.g. "919876543210". Leave empty to hide the WhatsApp button.
 
     // ---- Delivery videos: tap to play (YouTube or a video file in the repository) ----
@@ -332,16 +335,20 @@
       return String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br>");
     }
 
+    var thanks = document.getElementById("thanks-panel");
+    var tabsBar = document.querySelector(".tabs");
+    var lastTab = "general";
+
     function sendEnquiry(form, subject, details, replyTo, phone) {
       var els = form.elements;
       if (els.website && els.website.value) { return; } // spam trap field
       var status = form.querySelector(".form-status");
       var btn = form.querySelector('button[type="submit"]');
       if (!emailReady) {
-        // Backup: open the visitor's email app
-        window.location.href = "mailto:" + STUDIO_EMAIL + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(details);
+        status.textContent = "Sorry, the enquiry form is not available right now. Please try again later.";
         return;
       }
+      lastTab = form === forms.delivery ? "delivery" : "general";
       btn.disabled = true;
       status.textContent = "Sending...";
       emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
@@ -352,13 +359,25 @@
         phone: phone || ""
       }).then(function () {
         form.reset();
-        status.textContent = "Thank you! Your enquiry has been sent. We will reply soon.";
-      }).catch(function () {
+        status.textContent = "";
+        form.hidden = true;
+        tabsBar.hidden = true;
+        thanks.hidden = false;
+        thanks.focus();
+        thanks.scrollIntoView({ behavior: "smooth", block: "center" });
+      }).catch(function (err) {
+        console.error("EmailJS error:", err);
         status.textContent = "Sorry, your enquiry could not be sent. Please try again in a moment.";
       }).then(function () {
         btn.disabled = false;
       });
     }
+
+    document.getElementById("thanks-back").addEventListener("click", function () {
+      thanks.hidden = true;
+      tabsBar.hidden = false;
+      showTab(lastTab);
+    });
 
     function generalText(f) {
       return "General project enquiry" +
