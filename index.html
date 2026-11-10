@@ -184,6 +184,9 @@
           <label>Name
             <input type="text" name="name" required autocomplete="name">
           </label>
+          <label>Phone / WhatsApp number
+            <input type="tel" name="phone" required autocomplete="tel" inputmode="tel" maxlength="17" placeholder="e.g. 98765 43210">
+          </label>
           <label>Email
             <input type="email" name="email" required autocomplete="email">
           </label>
@@ -210,7 +213,7 @@
             <input type="text" name="name" required autocomplete="name">
           </label>
           <label>Phone / WhatsApp number
-            <input type="tel" name="phone" required autocomplete="tel">
+            <input type="tel" name="phone" required autocomplete="tel" inputmode="tel" maxlength="17" placeholder="e.g. 98765 43210">
           </label>
           <label>Email (optional)
             <input type="email" name="email" autocomplete="email">
@@ -326,6 +329,21 @@
       a.addEventListener("click", function () { showTab(a.dataset.tab); });
     });
 
+    // ---- Indian mobile number check (Jio, Airtel, Vi, BSNL and others all start with 6, 7, 8 or 9) ----
+    function cleanIndianPhone(v) {
+      var d = String(v).replace(/[\s\-().]/g, "");
+      var m = d.match(/^(?:\+91|91|0)?([6-9]\d{9})$/);
+      return m ? "+91 " + m[1] : null;
+    }
+    function phoneOf(form) {
+      return cleanIndianPhone(form.elements.phone.value) || form.elements.phone.value;
+    }
+    document.querySelectorAll('input[name="phone"]').forEach(function (inp) {
+      inp.addEventListener("input", function () {
+        inp.setCustomValidity(cleanIndianPhone(inp.value) ? "" : "Please enter a valid 10-digit Indian mobile number (it starts with 6, 7, 8 or 9).");
+      });
+    });
+
     // ---- Send enquiries with EmailJS ----
     var emailReady = !!(EMAILJS_PUBLIC_KEY && EMAILJS_SERVICE_ID && EMAILJS_TEMPLATE_ID && window.emailjs);
     if (emailReady) { emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY }); }
@@ -382,6 +400,7 @@
     function generalText(f) {
       return "General project enquiry" +
         "\nName: " + f.name.value +
+        "\nPhone: " + phoneOf(f) +
         "\nEmail: " + f.email.value +
         "\nProject type: " + f.type.value +
         "\n\n" + f.message.value;
@@ -390,7 +409,7 @@
     function deliveryText(f) {
       return "New vehicle delivery shoot enquiry" +
         "\nName: " + f.name.value +
-        "\nPhone: " + f.phone.value +
+        "\nPhone: " + phoneOf(f) +
         "\nEmail: " + f.email.value +
         "\nVehicle: " + f.vehicle.value +
         "\nBrand and model: " + f.model.value +
@@ -404,13 +423,13 @@
     forms.general.addEventListener("submit", function (e) {
       e.preventDefault();
       var f = e.target;
-      sendEnquiry(f, "Enquiry: " + f.type.value + " - " + f.name.value, generalText(f), f.email.value, "");
+      sendEnquiry(f, "Enquiry: " + f.type.value + " - " + f.name.value, generalText(f), f.email.value, phoneOf(f));
     });
 
     forms.delivery.addEventListener("submit", function (e) {
       e.preventDefault();
       var f = e.target;
-      sendEnquiry(f, "Delivery shoot: " + f.vehicle.value + " - " + f.name.value, deliveryText(f), f.email.value, f.phone.value);
+      sendEnquiry(f, "Delivery shoot: " + f.vehicle.value + " - " + f.name.value, deliveryText(f), f.email.value, phoneOf(f));
     });
 
     var waBtn = forms.delivery.querySelector(".wa-btn");
