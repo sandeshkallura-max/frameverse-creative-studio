@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FRAMEVERSE — Creative Photography & Film Studio</title>
+  <meta name="description" content="Frameverse is a creative photography and film studio for automotive, wedding, editorial and commercial productions.">
   <link rel="stylesheet" href="globals.css">
 </head>
 <body>
@@ -25,7 +26,7 @@
     <div class="container hero-content">
       <span class="eyebrow">Editorial Production Studio</span>
       <h1>Cinematic vision, captured in motion.</h1>
-      <p>A responsive, premium editorial website starter for an all-category photography, videography and creative production studio.</p>
+      <p>An all-category photography, videography and creative production studio.</p>
       <div class="hero-actions">
         <a href="#work" class="btn">Explore Work</a>
         <a href="#contact" class="btn btn-outline">Book Production</a>
@@ -44,14 +45,14 @@
       </div>
       <div class="portfolio-grid">
         <div class="work-card work-1">
-          <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1000&q=80" alt="Cinematic Production">
+          <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1000&q=80" alt="Cinematic Production" loading="lazy">
           <div class="work-overlay">
             <small>AUTOMOTIVE</small>
             <h3>Nightfall Velocity</h3>
           </div>
         </div>
         <div class="work-card work-2">
-          <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1000&q=80" alt="Wedding Production">
+          <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1000&q=80" alt="Wedding Production" loading="lazy">
           <div class="work-overlay">
             <small>WEDDINGS & EVENTS</small>
             <h3>The Royal Vows</h3>
@@ -94,6 +95,51 @@
     </div>
   </section>
 
+  <section id="manifesto" class="section manifesto-section">
+    <div class="container manifesto-grid">
+      <div>
+        <span class="eyebrow">Manifesto</span>
+        <h2>Every frame has a reason.</h2>
+      </div>
+      <div>
+        <p>We plan each shoot around the story first and the equipment second. Before the camera comes out, we agree on the mood, the light and what the finished piece should make people feel.</p>
+        <p>From a single portrait to a full brand film, we handle the work from concept to final grade, so the look stays consistent from the first idea to the last delivery.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="section">
+    <div class="container contact-grid">
+      <div>
+        <span class="eyebrow">Enquire</span>
+        <h2>Tell us about your project.</h2>
+        <p class="muted">Send a few details and your email app will open with the message ready to send. We reply with availability and a quote.</p>
+      </div>
+      <form class="contact-form" id="enquiry-form">
+        <label>Name
+          <input type="text" name="name" required autocomplete="name">
+        </label>
+        <label>Email
+          <input type="email" name="email" required autocomplete="email">
+        </label>
+        <label>Project type
+          <select name="type">
+            <option>Automotive</option>
+            <option>Wedding / Event</option>
+            <option>Portrait / Fashion</option>
+            <option>Commercial / Product</option>
+            <option>Other</option>
+          </select>
+        </label>
+        <label>Message
+          <textarea name="message" required></textarea>
+        </label>
+        <button type="submit" class="btn">Send enquiry</button>
+        <p class="form-note">No data is stored on this website. The form opens your email app.</p>
+      </form>
+    </div>
+  </section>
+
   <footer class="container">
     <div class="footer-inner">
       <p>© 2026 Frameverse Creative Studio. All rights reserved.</p>
@@ -103,5 +149,23 @@
       </div>
     </div>
   </footer>
+
+  <script>
+    // Replace with your real email address
+    var STUDIO_EMAIL = "hello@example.com";
+
+    document.getElementById("enquiry-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var f = e.target;
+      var subject = "Enquiry: " + f.type.value + " - " + f.name.value;
+      var body = "Name: " + f.name.value +
+                 "\nEmail: " + f.email.value +
+                 "\nProject type: " + f.type.value +
+                 "\n\n" + f.message.value;
+      window.location.href = "mailto:" + STUDIO_EMAIL +
+        "?subject=" + encodeURIComponent(subject) +
+        "&body=" + encodeURIComponent(body);
+    });
+  </script>
 </body>
 </html>
